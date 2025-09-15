@@ -325,8 +325,8 @@ export default function InvoiceForm({
             <div
               className={`p-3 rounded text-sm mb-4 ${
                 alert.type === "success"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
+                  ? "bg-green-100 text-green-700 hover:bg-green-200"
+                  : "bg-red-100 text-red-700 hover:bg-red-200"
               }`}
             >
               {alert.message}
@@ -679,9 +679,8 @@ export default function InvoiceForm({
               </Button>
               <Button
                 type="button"
-                variant="destructive"
                 onClick={resetForm}
-                className="w-full md:w-1/3"
+                className="w-full md:w-1/3 bg-red-600 text-white hover:bg-red-700"
               >
                 Reset Form
               </Button>

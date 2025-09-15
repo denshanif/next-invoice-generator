@@ -28,8 +28,8 @@ export default function DeleteInvoiceDialog({
           Apakah Anda yakin ingin menghapus invoice #{invoice?.invoice_number}?
         </p>
         <DialogFooter className="mt-4 flex justify-end gap-2">
-          <Button variant="outline" onClick={onClose}>Batal</Button>
-          <Button variant="destructive" onClick={onConfirm}>Hapus</Button>
+          <Button className="bg-gray-200 hover:bg-gray-300 text-gray-800" onClick={onClose}>Batal</Button>
+          <Button className="bg-red-600 text-white hover:bg-red-700" onClick={onConfirm}>Hapus</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

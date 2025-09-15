@@ -1,10 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import BadgeComponent from "@/components/BadgeComponent";
 
 export default function LoginSection({ onLogin }: { onLogin: () => void }) {
   return (
-    <div className="flex flex-col items-center gap-3">
-      <p>Silakan login terlebih dahulu untuk membuat invoice</p>
+    <div className="flex flex-col items-center gap-3 my-auto">
+      <p className="text-lg text-gray-700 mb-4 text-center">Please log in to start managing your invoices 😊</p>
       <Button
         onClick={onLogin}
         variant="outline"
@@ -19,6 +20,8 @@ export default function LoginSection({ onLogin }: { onLogin: () => void }) {
         </svg>
         Login dengan Google
       </Button>
+
+      <BadgeComponent />
     </div>
   );
 }

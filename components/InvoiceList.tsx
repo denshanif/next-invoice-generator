@@ -45,8 +45,8 @@ export default function InvoiceList({
                 </div>
                 <div className="flex flex-col md:flex-row md:items-center gap-2">
                   <Button size="sm" className="w-full md:w-auto bg-indigo-600 text-white hover:bg-indigo-700" onClick={() => onView(inv.id)}>Lihat</Button>
-                  <Button size="sm" variant="outline" className="w-full md:w-auto" onClick={() => onEdit(inv)}>Edit</Button>
-                  <Button size="sm" variant="destructive" className="w-full md:w-auto" onClick={() => onDelete(inv)}>Hapus</Button>
+                  <Button size="sm" variant={"outline"} className="w-full md:w-auto" onClick={() => onEdit(inv)}>Edit</Button>
+                  <Button size="sm" className="w-full md:w-auto bg-red-600 text-white hover:bg-red-700" onClick={() => onDelete(inv)}>Hapus</Button>
                 </div>
               </li>
             ))}

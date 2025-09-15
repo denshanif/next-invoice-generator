@@ -11,6 +11,7 @@ import EditInvoiceDialog from "@/components/EditInvoiceDialog";
 import DeleteInvoiceDialog from "@/components/DeleteInvoiceDialog";
 import InvoiceForm from "@/components/InvoiceForm";
 import { Button } from "@/components/ui/button";
+import BadgeComponent from "@/components/BadgeComponent";
 
 type Invoice = {
   id: string;
@@ -70,7 +71,8 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen flex flex-col items-center p-6">
-      <h1 className="text-3xl font-bold mb-6">📑 Invoice Generator by Denshanif</h1>
+      <h1 className="text-3xl font-bold mb-6 ">📑 Invoice Generator</h1>
+      <p className="text-center text-gray-600 max-w-md mb-4">A simple invoice generator app using Next.js, Supabase, and Tailwind CSS.</p>
 
       {!user ? (
         <LoginSection onLogin={handleLogin} />
@@ -107,7 +109,9 @@ export default function HomePage() {
             open={!!invoiceToDelete}
             onClose={() => setInvoiceToDelete(null)}
             onConfirm={confirmDeleteInvoice}
-          />
+            />
+            
+          <BadgeComponent />
         </div>
       )}
     </main>
