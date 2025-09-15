@@ -8,15 +8,6 @@ import Image from "next/image";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function InvoiceDetailPage() {
   const { id } = useParams() as { id: string };
@@ -171,60 +162,35 @@ export default function InvoiceDetailPage() {
           {/* Daftar Item */}
           <div>
             <h4 className="font-semibold mb-2">Daftar Item</h4>
-
-            {/* Scrollable Table untuk layar */}
-            <div className="block print:hidden">
-              <ScrollArea className="h-64 border rounded-md">
-                <Table className="w-full text-sm">
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-left">Nama</TableHead>
-                      <TableHead className="text-right">Qty</TableHead>
-                      <TableHead className="text-right">Harga</TableHead>
-                      <TableHead className="text-right">Subtotal</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {items.map((it: InvoiceItem, idx: number) => (
-                      <TableRow key={idx}>
-                        <TableCell>{it.name || "-"}</TableCell>
-                        <TableCell className="text-right">{it.qty}</TableCell>
-                        <TableCell className="text-right">
-                          Rp {Number(it.price || 0).toLocaleString("id-ID")}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          Rp{" "}
-                          {Number(it.qty * it.price || 0).toLocaleString(
-                            "id-ID"
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </ScrollArea>
-            </div>
-
-            {/* Table HTML biasa untuk print */}
-            <div className="hidden print:block">
-              <table className="w-full text-sm border border-gray-300">
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-sm">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="border px-2 py-1 text-left">Nama</th>
-                    <th className="border px-2 py-1 text-right">Qty</th>
-                    <th className="border px-2 py-1 text-right">Harga</th>
-                    <th className="border px-2 py-1 text-right">Subtotal</th>
+                    <th className="border px-4 py-2 text-left font-medium">
+                      Nama
+                    </th>
+                    <th className="border px-4 py-2 text-right font-medium">
+                      Qty
+                    </th>
+                    <th className="border px-4 py-2 text-right font-medium">
+                      Harga
+                    </th>
+                    <th className="border px-4 py-2 text-right font-medium">
+                      Subtotal
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((it: InvoiceItem, idx: number) => (
-                    <tr key={idx}>
-                      <td className="border px-2 py-1">{it.name || "-"}</td>
-                      <td className="border px-2 py-1 text-right">{it.qty}</td>
-                      <td className="border px-2 py-1 text-right">
+                  {items.map((it, idx) => (
+                    <tr key={idx} className="even:bg-gray-50">
+                      <td className="border px-4 py-2 text-left">
+                        {it.name || "-"}
+                      </td>
+                      <td className="border px-4 py-2 text-right">{it.qty}</td>
+                      <td className="border px-4 py-2 text-right">
                         Rp {Number(it.price || 0).toLocaleString("id-ID")}
                       </td>
-                      <td className="border px-2 py-1 text-right">
+                      <td className="border px-4 py-2 text-right">
                         Rp{" "}
                         {Number(it.qty * it.price || 0).toLocaleString("id-ID")}
                       </td>
