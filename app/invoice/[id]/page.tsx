@@ -96,7 +96,7 @@ export default function InvoiceDetailPage() {
           variant="outline"
           onClick={() => window.print()}
           size="sm"
-          className="print:hidden bg-blue-600 text-white hover:bg-blue-700 print:hidden"
+          className="print:hidden bg-indigo-600 text-white hover:bg-indigo-700"
         >
           Cetak / PDF
         </Button>

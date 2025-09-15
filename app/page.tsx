@@ -118,7 +118,7 @@ export default function HomePage() {
                     <div className="flex flex-col md:flex-row md:items-center gap-2">
                       <Button
                         size="sm"
-                        className="w-full md:w-auto bg-blue-600 text-white hover:bg-blue-700"
+                        className="w-full md:w-auto bg-indigo-600 text-white hover:bg-indigo-700"
                         onClick={() => handleViewInvoice(inv.id)}
                       >
                         Lihat

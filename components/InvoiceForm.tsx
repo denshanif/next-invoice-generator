@@ -383,7 +383,7 @@ export default function InvoiceForm({
                 />
                 <div className="flex items-center gap-3 mt-2">
                   <label className="text-sm font-medium">Logo (opsional)</label>
-                  <label className="cursor-pointer inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                  <label className="cursor-pointer inline-flex items-center px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
                     Pilih File
                     <input
                       type="file"
@@ -624,7 +624,7 @@ export default function InvoiceForm({
             <div className="flex flex-col md:flex-row gap-3 justify-center">
               <Button
                 type="submit"
-                className="w-full md:w-1/3 bg-blue-600 text-white hover:bg-blue-700"
+                className="w-full md:w-1/3 bg-indigo-600 text-white hover:bg-indigo-700"
                 disabled={loading}
               >
                 {loading
