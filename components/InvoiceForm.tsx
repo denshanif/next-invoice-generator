@@ -18,9 +18,26 @@ interface Item {
   price: number;
 }
 
+interface InvoiceData {
+  id?: number;
+  invoice_number?: string;
+  client?: string;
+  client_email?: string;
+  client_phone?: string;
+  business?: string;
+  business_contact?: string;
+  logo_data_url?: string | null;
+  items?: Item[];
+  due_date?: string;
+  payment_method?: string;
+  status?: "Draft" | "Sent" | "Paid" | "Overdue";
+  discount_percent?: number;
+  tax_percent?: number;
+}
+
 interface InvoiceFormProps {
   onSuccess?: () => void; // callback selesai simpan
-  defaultValues?: any; // data invoice untuk edit
+  defaultValues?: InvoiceData; // data invoice untuk edit
 }
 
 function generateInvoiceNumber() {
@@ -397,7 +414,7 @@ export default function InvoiceForm({
                     <div className="col-span-5 space-y-1">
                       <Label>Nama Item</Label>
                       <Input
-                        ref={(el) => (nameRefs.current[idx] = el)}
+                        ref={(el) => { nameRefs.current[idx] = el; }}
                         value={item.name}
                         onChange={(e) =>
                           handleItemChange(idx, "name", e.target.value)

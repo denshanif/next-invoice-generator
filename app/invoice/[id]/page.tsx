@@ -20,7 +20,34 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function InvoiceDetailPage() {
   const { id } = useParams() as { id: string };
-  const [invoice, setInvoice] = useState<any | null>(null);
+  interface InvoiceItem {
+    name: string;
+    qty: number;
+    price: number;
+  }
+
+  interface Invoice {
+    id: string;
+    invoice_number?: string;
+    business?: string;
+    business_contact?: string;
+    logo_data_url?: string;
+    client?: string;
+    client_email?: string;
+    client_phone?: string;
+    due_date?: string;
+    created_at: string;
+    items?: InvoiceItem[];
+    subtotal?: number;
+    discount_percent?: number;
+    discount_value?: number;
+    tax_percent?: number;
+    tax_value?: number;
+    total?: number;
+    payment_method?: string;
+  }
+
+  const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -158,7 +185,7 @@ export default function InvoiceDetailPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {items.map((it: any, idx: number) => (
+                    {items.map((it: InvoiceItem, idx: number) => (
                       <TableRow key={idx}>
                         <TableCell>{it.name || "-"}</TableCell>
                         <TableCell className="text-right">{it.qty}</TableCell>
@@ -190,7 +217,7 @@ export default function InvoiceDetailPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((it: any, idx: number) => (
+                  {items.map((it: InvoiceItem, idx: number) => (
                     <tr key={idx}>
                       <td className="border px-2 py-1">{it.name || "-"}</td>
                       <td className="border px-2 py-1 text-right">{it.qty}</td>

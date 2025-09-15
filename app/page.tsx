@@ -14,12 +14,21 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
+type Invoice = {
+  id: string;
+  invoice_number: string;
+  client: string;
+  client_email: string;
+  created_at: string;
+  // Add other fields as needed
+};
+
 export default function HomePage() {
-  const [invoices, setInvoices] = useState([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingInvoice, setEditingInvoice] = useState(null);
+  const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [invoiceToDelete, setInvoiceToDelete] = useState(null);
+  const [invoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null);
   const router = useRouter();
 
   // Ambil data invoice
@@ -37,12 +46,12 @@ export default function HomePage() {
     fetchInvoices();
   }, []);
 
-  const handleViewInvoice = (invoiceId) => {
+  const handleViewInvoice = (invoiceId: string) => {
     router.push(`/invoice/${invoiceId}`);
   };
 
   // Buka dialog hapus
-  const handleOpenDeleteDialog = (invoice) => {
+  const handleOpenDeleteDialog = (invoice: Invoice) => {
     setInvoiceToDelete(invoice);
   };
 
@@ -140,7 +149,10 @@ export default function HomePage() {
       </div>
 
       {/* Dialog edit invoice */}
-      <Dialog open={showEditModal} onOpenChange={(open) => setShowEditModal(open)}>
+      <Dialog
+        open={showEditModal}
+        onOpenChange={(open) => setShowEditModal(open)}
+      >
         <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
@@ -149,7 +161,10 @@ export default function HomePage() {
           </DialogHeader>
           {editingInvoice && (
             <InvoiceForm
-              defaultValues={editingInvoice}
+              defaultValues={{
+                ...editingInvoice,
+                id: Number(editingInvoice.id),
+              }}
               onSuccess={() => {
                 setShowEditModal(false);
                 setEditingInvoice(null);
