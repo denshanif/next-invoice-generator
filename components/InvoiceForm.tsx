@@ -38,6 +38,7 @@ interface InvoiceData {
 interface InvoiceFormProps {
   onSuccess?: () => void;
   defaultValues?: InvoiceData;
+  userId?: string; // tambahkan userId di sini jika diperlukan
 }
 
 function generateInvoiceNumber() {
@@ -52,6 +53,7 @@ function generateInvoiceNumber() {
 export default function InvoiceForm({
   onSuccess,
   defaultValues,
+  userId,
 }: InvoiceFormProps) {
   const [invoiceNumber, setInvoiceNumber] = useState(
     defaultValues?.invoice_number || ""
@@ -83,9 +85,8 @@ export default function InvoiceForm({
   const [discountPercent, setDiscountPercent] = useState(
     defaultValues?.discount_percent || 0
   );
-  const [taxPercent, setTaxPercent] = useState(
-    defaultValues?.tax_percent || 11
-  );
+  const [isTaxActive, setIsTaxActive] = useState(true);
+  const [taxPercent, setTaxPercent] = useState(11);
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -95,6 +96,17 @@ export default function InvoiceForm({
   } | null>(null);
 
   const nameRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("invoiceFormDraft");
+    if (saved) {
+      const draft = JSON.parse(saved);
+      setInvoiceNumber(draft.invoiceNumber || "");
+      setClient(draft.client || "");
+      setClientEmail(draft.clientEmail || "");
+      setItems(draft.items || [{ name: "", qty: 1, unit: "", price: 0 }]);
+    }
+  }, []);
 
   useEffect(() => {
     if (!invoiceNumber) setInvoiceNumber(generateInvoiceNumber());
@@ -149,8 +161,8 @@ export default function InvoiceForm({
     [subtotal, discountValue]
   );
   const taxValue = useMemo(
-    () => (taxable * taxPercent) / 100,
-    [taxable, taxPercent]
+    () => (isTaxActive ? (taxable * taxPercent) / 100 : 0),
+    [taxable, isTaxActive, taxPercent]
   );
   const total = useMemo(() => taxable + taxValue, [taxable, taxValue]);
 
@@ -208,7 +220,7 @@ export default function InvoiceForm({
     setPaymentMethod("Transfer Bank");
     setStatus("Draft");
     setDiscountPercent(0);
-    setTaxPercent(11);
+    setTaxPercent(11 / 12);
     setErrors({});
   };
 
@@ -216,10 +228,18 @@ export default function InvoiceForm({
     e.preventDefault();
     if (!validate()) return;
 
+    // === CEK USER LOGIN ===
+    if (!userId) {
+      setAlert({ type: "error", message: "User belum login." });
+      return; // hentikan eksekusi
+    }
+    // =====================
+
     setLoading(true);
     setAlert(null);
 
     const payload = {
+      user_id: userId,
       invoice_number: invoiceNumber,
       client,
       client_email: clientEmail,
@@ -456,17 +476,24 @@ export default function InvoiceForm({
               </div>
               <div className="flex flex-col gap-2">
                 <Label>PPN (%)</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={isTaxActive}
+                    onChange={(e) => setIsTaxActive(e.target.checked)}
+                  />
+                  <span>Aktifkan PPN</span>
+                </div>
                 <Input
                   type="number"
-                  min={0}
-                  max={100}
                   value={taxPercent}
                   onChange={(e) => setTaxPercent(Number(e.target.value || 0))}
+                  disabled
                   className={errors.taxPercent ? "border-red-500" : ""}
                 />
-                {errors.taxPercent && (
-                  <p className="text-sm text-red-500">{errors.taxPercent}</p>
-                )}
+                <p className="text-sm text-gray-500">
+                  PPN dihitung dari subtotal setelah diskon
+                </p>
               </div>
             </div>
 
@@ -703,6 +730,7 @@ export default function InvoiceForm({
                 <tr>
                   <th className="border px-2 py-1 text-left">Nama</th>
                   <th className="border px-2 py-1 text-right">Qty</th>
+                  <th className="border px-2 py-1 text-right">Satuan</th>
                   <th className="border px-2 py-1 text-right">Harga</th>
                   <th className="border px-2 py-1 text-right">Subtotal</th>
                 </tr>
@@ -712,6 +740,9 @@ export default function InvoiceForm({
                   <tr key={idx}>
                     <td className="border px-2 py-1">{it.name || "-"}</td>
                     <td className="border px-2 py-1 text-right">{it.qty}</td>
+                    <td className="border px-2 py-1 text-right">
+                      {it.unit || "-"}
+                    </td>
                     <td className="border px-2 py-1 text-right">
                       Rp {it.price.toLocaleString("id-ID")}
                     </td>

@@ -15,6 +15,7 @@ export default function InvoiceDetailPage() {
     name: string;
     qty: number;
     price: number;
+    unit?: string;
   }
 
   interface Invoice {
@@ -104,7 +105,7 @@ export default function InvoiceDetailPage() {
 
       <Card className="w-full max-w-4xl border print:border-0 print:shadow-none">
         <CardHeader>
-          <div className="flex justify-between items-center print:hidden">
+          <div className="flex justify-between items-center">
             <CardTitle>Invoice {invoice_number || "#0001"}</CardTitle>
             {logo_data_url && (
               <Image
@@ -173,6 +174,9 @@ export default function InvoiceDetailPage() {
                       Qty
                     </th>
                     <th className="border px-4 py-2 text-right font-medium">
+                      Satuan
+                    </th>
+                    <th className="border px-4 py-2 text-right font-medium">
                       Harga
                     </th>
                     <th className="border px-4 py-2 text-right font-medium">
@@ -187,6 +191,7 @@ export default function InvoiceDetailPage() {
                         {it.name || "-"}
                       </td>
                       <td className="border px-4 py-2 text-right">{it.qty}</td>
+                      <td className="border px-4 py-2 text-right">{it.unit}</td>
                       <td className="border px-4 py-2 text-right">
                         Rp {Number(it.price || 0).toLocaleString("id-ID")}
                       </td>
