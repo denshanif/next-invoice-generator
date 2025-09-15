@@ -115,9 +115,10 @@ export default function HomePage() {
                         })}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col md:flex-row md:items-center gap-2">
                       <Button
                         size="sm"
+                        className="w-full md:w-auto bg-blue-600 text-white hover:bg-blue-700"
                         onClick={() => handleViewInvoice(inv.id)}
                       >
                         Lihat
@@ -125,6 +126,7 @@ export default function HomePage() {
                       <Button
                         size="sm"
                         variant="outline"
+                        className="w-full md:w-auto"
                         onClick={() => {
                           setEditingInvoice(inv);
                           setShowEditModal(true);
@@ -135,6 +137,7 @@ export default function HomePage() {
                       <Button
                         size="sm"
                         variant="destructive"
+                        className="w-full md:w-auto"
                         onClick={() => handleOpenDeleteDialog(inv)}
                       >
                         Hapus

@@ -267,7 +267,7 @@ export default function InvoiceForm({ onSuccess, defaultValues }: InvoiceFormPro
                 <Input className="mt-2" placeholder="Kontak / alamat singkat" value={businessContact} onChange={e => setBusinessContact(e.target.value)} />
                 <div className="flex items-center gap-3 mt-2">
                   <label className="text-sm font-medium">Logo (opsional)</label>
-                  <label className="cursor-pointer inline-flex items-center px-3 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition">
+                  <label className="cursor-pointer inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                     Pilih File
                     <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                   </label>
@@ -368,7 +368,7 @@ export default function InvoiceForm({ onSuccess, defaultValues }: InvoiceFormPro
 
             {/* ===== Submit & Reset ===== */}
             <div className="flex flex-col md:flex-row gap-3 justify-center">
-              <Button type="submit" className="w-full md:w-1/3 bg-indigo-600 hover:bg-indigo-700 text-white" disabled={loading}>
+              <Button type="submit" className="w-full md:w-1/3 bg-blue-600 text-white hover:bg-blue-700" disabled={loading}>
                 {loading ? "Menyimpan..." : defaultValues?.id ? "Update Invoice" : "Generate Invoice"}
               </Button>
               <Button type="button" variant="destructive" onClick={resetForm} className="w-full md:w-1/3">Reset Form</Button>
