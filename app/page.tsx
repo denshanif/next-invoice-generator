@@ -32,7 +32,7 @@ export default function HomePage() {
   const [invoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null);
   const router = useRouter();
 
-  // === Fungsi ambil invoice user ===
+  // === Fetch invoices user ===
   const fetchInvoices = useCallback(async () => {
     if (!user) return;
     setLoading(true);
@@ -47,7 +47,7 @@ export default function HomePage() {
     setLoading(false);
   }, [user]);
 
-  // === Cek user login ===
+  // === Check login session ===
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user || null);
@@ -60,7 +60,7 @@ export default function HomePage() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // Ambil invoice setiap user berubah
+  // Fetch invoices setiap user berubah
   useEffect(() => {
     fetchInvoices();
   }, [user, fetchInvoices]);
@@ -69,9 +69,7 @@ export default function HomePage() {
   const handleLogin = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: window.location.origin
-      }
+      options: { redirectTo: window.location.origin },
     });
   };
 
@@ -108,7 +106,6 @@ export default function HomePage() {
             variant="outline"
             className="flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 hover:border-gray-400"
           >
-            {/* Google SVG */}
             <svg
               className="w-5 h-5"
               viewBox="0 0 533.5 544.3"
@@ -151,8 +148,7 @@ export default function HomePage() {
           </div>
 
           {/* Form untuk membuat invoice baru */}
-
-          <InvoiceForm userId={user.id} onSuccess={() => {}} />
+          <InvoiceForm onSuccess={() => fetchInvoices()} />
 
           {/* List invoice */}
           <div className="w-full max-w-4xl mt-8">
@@ -244,9 +240,9 @@ export default function HomePage() {
               </DialogHeader>
               {editingInvoice && (
                 <InvoiceForm
-                  defaultValues={{
-                    ...editingInvoice,
-                    id: Number(editingInvoice.id),
+                    defaultValues={{
+                      ...editingInvoice,
+                      id: editingInvoice.id,
                   }}
                   onSuccess={() => {
                     setShowEditModal(false);
@@ -272,9 +268,7 @@ export default function HomePage() {
           {/* Dialog hapus konfirmasi */}
           <Dialog
             open={!!invoiceToDelete}
-            onOpenChange={(open) => {
-              if (!open) setInvoiceToDelete(null);
-            }}
+            onOpenChange={(open) => !open && setInvoiceToDelete(null)}
           >
             <DialogContent className="sm:max-w-md">
               <DialogHeader>

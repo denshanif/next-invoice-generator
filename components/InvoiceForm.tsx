@@ -19,7 +19,7 @@ interface Item {
 }
 
 interface InvoiceData {
-  id?: number;
+  id?: string;
   invoice_number?: string;
   client?: string;
   client_email?: string;
@@ -33,12 +33,16 @@ interface InvoiceData {
   status?: "Draft" | "Sent" | "Paid" | "Overdue";
   discount_percent?: number;
   tax_percent?: number;
+  subtotal?: number;
+  discount_value?: number;
+  tax_value?: number;
+  total?: number;
+  user_id?: string;
 }
 
 interface InvoiceFormProps {
   onSuccess?: () => void;
   defaultValues?: InvoiceData;
-  userId?: string; // tambahkan userId di sini jika diperlukan
 }
 
 function generateInvoiceNumber() {
@@ -53,8 +57,10 @@ function generateInvoiceNumber() {
 export default function InvoiceForm({
   onSuccess,
   defaultValues,
-  userId,
 }: InvoiceFormProps) {
+  // ====== USER STATE ======
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+
   const [invoiceNumber, setInvoiceNumber] = useState(
     defaultValues?.invoice_number || ""
   );
@@ -96,6 +102,18 @@ export default function InvoiceForm({
   } | null>(null);
 
   const nameRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (user) setCurrentUser(user.id);
+      if (error) console.error("Supabase auth error:", error.message);
+    };
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("invoiceFormDraft");
@@ -229,17 +247,16 @@ export default function InvoiceForm({
     if (!validate()) return;
 
     // === CEK USER LOGIN ===
-    if (!userId) {
+    if (!currentUser) {
       setAlert({ type: "error", message: "User belum login." });
-      return; // hentikan eksekusi
+      return;
     }
-    // =====================
 
     setLoading(true);
     setAlert(null);
 
     const payload = {
-      user_id: userId,
+      user_id: currentUser,
       invoice_number: invoiceNumber,
       client,
       client_email: clientEmail,
