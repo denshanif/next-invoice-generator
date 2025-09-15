@@ -144,6 +144,7 @@ export default function HomePage() {
                 await supabase.auth.signOut();
                 setUser(null);
               }}
+              className="bg-red-600 text-white hover:bg-red-700"
             >
               Logout
             </Button>
