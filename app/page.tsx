@@ -47,40 +47,102 @@ export default function HomePage() {
 
   // Check login session
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user || null));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setUser(session?.user || null));
+    supabase.auth.getSession().then(({ data }) =>
+      setUser(data.session?.user || null)
+    );
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => setUser(session?.user || null)
+    );
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  useEffect(() => { fetchInvoices(); }, [user, fetchInvoices]);
+  useEffect(() => {
+    fetchInvoices();
+  }, [user, fetchInvoices]);
 
   // Handlers
   const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin } });
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
+    });
   };
-  const handleLogout = async () => { await supabase.auth.signOut(); setUser(null); };
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
   const handleViewInvoice = (id: string) => router.push(`/invoice/${id}`);
-  const handleEditInvoice = (inv: Invoice) => { setEditingInvoice(inv); setShowEditModal(true); };
+  const handleEditInvoice = (inv: Invoice) => {
+    setEditingInvoice(inv);
+    setShowEditModal(true);
+  };
   const handleDeleteInvoice = (inv: Invoice) => setInvoiceToDelete(inv);
   const confirmDeleteInvoice = async () => {
     if (!invoiceToDelete) return;
-    const { error } = await supabase.from("invoices").delete().eq("id", invoiceToDelete.id);
+    const { error } = await supabase
+      .from("invoices")
+      .delete()
+      .eq("id", invoiceToDelete.id);
     if (!error) fetchInvoices();
     setInvoiceToDelete(null);
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-6">
-      <h1 className="text-3xl font-bold mb-6 ">📑 Invoice Generator</h1>
-      <p className="text-center text-gray-600 max-w-md mb-4">A simple invoice generator app using Next.js, Supabase, and Tailwind CSS.</p>
-
+    <main className="min-h-screen flex flex-col items-center justify-between relative bg-gray-50 py-10">
       {!user ? (
-        <LoginSection onLogin={handleLogin} />
+        // ---------------- Landing Page Mode ----------------
+        <div className="flex flex-col items-center justify-center flex-1 px-6 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Simple Invoice Generator
+          </h1>
+          <p className="text-lg text-gray-600 max-w-xl mb-8">
+            Create, download, and manage your invoices easily with our free and
+            open-source web app.
+          </p>
+
+          <LoginSection onLogin={handleLogin} />
+
+          {/* Extra features highlight */}
+          <div className="grid md:grid-cols-4 gap-6 mt-16 max-w-4xl w-full">
+            <div className="p-6 border rounded-2xl shadow-sm bg-white">
+              <h3 className="font-semibold text-lg mb-2">⚡ Quick Setup</h3>
+              <p className="text-gray-600 text-sm">
+                Get started instantly with Google Login, no hassle required.
+              </p>
+            </div>
+            <div className="p-6 border rounded-2xl shadow-sm bg-white">
+              <h3 className="font-semibold text-lg mb-2">🖼️ Custom Logos</h3>
+              <p className="text-gray-600 text-sm">
+                Personalize your invoices by uploading your own business logo.
+              </p>
+            </div>
+            <div className="p-6 border rounded-2xl shadow-sm bg-white">
+              <h3 className="font-semibold text-lg mb-2">💾 Easy to Download</h3>
+              <p className="text-gray-600 text-sm">
+                Download your invoices as PDF with a single click.
+              </p>
+            </div>
+            <div className="p-6 border rounded-2xl shadow-sm bg-white">
+              <h3 className="font-semibold text-lg mb-2">☁️ Cloud Powered</h3>
+              <p className="text-gray-600 text-sm">
+                Your data is securely stored in Supabase with real-time sync.
+              </p>
+            </div>
+          </div>
+        </div>
       ) : (
-        <div className="w-full max-w-4xl">
-          {/* Logout */}
-          <div className="flex justify-end mb-4">
-            <Button variant="outline" className="bg-red-600 text-white hover:bg-red-700" onClick={handleLogout}>Logout</Button>
+        // ---------------- Dashboard Mode ----------------
+        <div className="w-full max-w-5xl flex-1 px-6">
+          {/* Top bar */}
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold">Your Invoices</h2>
+            <Button
+              variant="outline"
+              className="bg-red-600 text-white hover:bg-red-700"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
           </div>
 
           {/* Create new invoice */}
@@ -99,8 +161,15 @@ export default function HomePage() {
           <EditInvoiceDialog
             invoice={editingInvoice}
             open={showEditModal}
-            onClose={() => { setShowEditModal(false); setEditingInvoice(null); }}
-            onSuccess={() => { setShowEditModal(false); setEditingInvoice(null); fetchInvoices(); }}
+            onClose={() => {
+              setShowEditModal(false);
+              setEditingInvoice(null);
+            }}
+            onSuccess={() => {
+              setShowEditModal(false);
+              setEditingInvoice(null);
+              fetchInvoices();
+            }}
           />
 
           {/* Delete invoice dialog */}
@@ -109,11 +178,12 @@ export default function HomePage() {
             open={!!invoiceToDelete}
             onClose={() => setInvoiceToDelete(null)}
             onConfirm={confirmDeleteInvoice}
-            />
-            
-          <BadgeComponent />
+          />
         </div>
       )}
+
+      {/* Floating badge */}
+      <BadgeComponent />
     </main>
   );
 }
