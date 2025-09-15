@@ -704,7 +704,7 @@ export default function InvoiceForm({
                 {business || "Nama Bisnis"}
               </div>
               <div className="text-base">
-                Kontak: {businessContact || "Email / Telepon"}
+                Kontak/Alamat Bisnis: {businessContact || "-"}
               </div>
               <div className="text-sm text-gray-500">
                 Dibuat: {new Date().toLocaleDateString("id-ID")}

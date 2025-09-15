@@ -129,7 +129,7 @@ export default function InvoiceDetailPage() {
                 {business || "Nama Bisnis"}
               </div>
               <div className="text-base">
-                Kontak: {business_contact || "Email / Telepon"}
+                Kontak/Alamat Bisnis: {business_contact || "-"}
               </div>
               <div className="text-sm text-gray-500">
                 Dibuat:{" "}
